@@ -2345,13 +2345,13 @@ Status 201 Created
 
 ## Instructions
 
-* [ ] Please fork and clone this repository.
-* [ ] This repository does have a starter project, so you must start with that application inside of the cloned repository folder. Regularly commit and push your code as appropriate.
+* [x] Please fork and clone this repository.
+* [x] This repository does have a starter project, so you must start with that application inside of the cloned repository folder. Regularly commit and push your code as appropriate.
 
 ### MVP
 
-* [ ] Provide unit testing for the User Service. To reach MVP you must provide at least 75% coverage of the code in User Service as reported in IntelliJ
-* [ ] Provide unit testing for the User Controller. To reach MVP you must provide at least 75% coverage of the code in User Controller as reported in IntelliJ
+* [x] Provide unit testing for the User Service. To reach MVP you must provide at least 75% coverage of the code in User Service as reported in IntelliJ
+* [x] Provide unit testing for the User Controller. To reach MVP you must provide at least 75% coverage of the code in User Controller as reported in IntelliJ
 
 ### Stretch Goal
 
