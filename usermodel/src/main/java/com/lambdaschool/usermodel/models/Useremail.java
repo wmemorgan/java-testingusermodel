@@ -2,7 +2,14 @@ package com.lambdaschool.usermodel.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
 /**
@@ -39,8 +46,7 @@ public class Useremail extends Auditable
     @ManyToOne
     @JoinColumn(name = "userid",
         nullable = false)
-    @JsonIgnoreProperties(value = "useremails",
-        allowSetters = true)
+    @JsonIgnoreProperties(value = "useremails", allowSetters = true)
     private User user;
 
     /**
@@ -91,13 +97,7 @@ public class Useremail extends Auditable
      */
     public String getUseremail()
     {
-        if (useremail == null) // this is possible when updating a user
-        {
-            return null;
-        } else
-        {
-            return useremail.toLowerCase();
-        }
+        return useremail;
     }
 
     /**

@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * The CRUD Repository connecting Role to the rest of the application
  */
-public interface RoleRepository extends CrudRepository<Role, Long>
+public interface RoleRepository
+        extends CrudRepository<Role, Long>
 {
     /**
      * JPA Query to find a role by name case insensitive search
@@ -18,12 +19,6 @@ public interface RoleRepository extends CrudRepository<Role, Long>
      * @return the first role matching the given name using a case insensitive search
      */
     Role findByNameIgnoreCase(String name);
-
-    /*
-     *
-     * The following are new from initial
-     *
-     */
 
     /**
      * Updates the name of the role based on the given role id.
@@ -35,9 +30,10 @@ public interface RoleRepository extends CrudRepository<Role, Long>
     @Transactional
     @Modifying
     @Query(value = "UPDATE roles SET name = :name, last_modified_by = :uname, last_modified_date = CURRENT_TIMESTAMP WHERE roleid = :roleid",
-        nativeQuery = true)
+            nativeQuery = true)
     void updateRoleName(
-        String uname,
-        long roleid,
-        String name);
+            String uname,
+            long roleid,
+            String name);
+
 }

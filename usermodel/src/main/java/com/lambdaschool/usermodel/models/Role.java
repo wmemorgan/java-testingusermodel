@@ -2,9 +2,16 @@ package com.lambdaschool.usermodel.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The entity allowing interaction with the roles table.
@@ -34,9 +41,8 @@ public class Role extends Auditable
      */
     @OneToMany(mappedBy = "role",
         cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "role",
-        allowSetters = true)
-    private List<UserRoles> users = new ArrayList<>();
+    @JsonIgnoreProperties(value = "role", allowSetters = true)
+    private Set<UserRoles> users = new HashSet<>();
 
     /**
      * Default Constructor used primarily by the JPA.
@@ -82,13 +88,7 @@ public class Role extends Auditable
      */
     public String getName()
     {
-        if (name == null)
-        {
-            return null;
-        } else
-        {
-            return name.toUpperCase();
-        }
+        return name;
     }
 
     /**
@@ -106,7 +106,7 @@ public class Role extends Auditable
      *
      * @return A list of user role combinations associated with this role
      */
-    public List<UserRoles> getUsers()
+    public Set<UserRoles> getUsers()
     {
         return users;
     }
@@ -116,18 +116,8 @@ public class Role extends Auditable
      *
      * @param users Change the list of user role combinations associated with this role to this one
      */
-    public void setUsers(List<UserRoles> users)
+    public void setUsers(Set<UserRoles> users)
     {
         this.users = users;
     }
-
-    /**
-     * Commented out audit field getter
-     *
-     * @return the username (String) of the user who last modified this role
-     */
-    //    public String getLastModifiedBy()
-    //    {
-    //        return lastModifiedBy;
-    //    }
 }

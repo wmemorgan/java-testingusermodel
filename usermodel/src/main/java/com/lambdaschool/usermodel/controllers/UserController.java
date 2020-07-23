@@ -6,7 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -35,31 +43,31 @@ public class UserController
      * @see UserService#findAll() UserService.findAll()
      */
     @GetMapping(value = "/users",
-        produces = {"application/json"})
+            produces = "application/json")
     public ResponseEntity<?> listAllUsers()
     {
         List<User> myUsers = userService.findAll();
         return new ResponseEntity<>(myUsers,
-            HttpStatus.OK);
+                                    HttpStatus.OK);
     }
 
     /**
      * Returns a single user based off a user id number
-     * <br>Example: <a href="http://localhost:2019/users/user/7">http://localhost:2019/users/user/7</a>
+     * <br>Example: http://localhost:2019/users/user/7
      *
      * @param userId The primary key of the user you seek
      * @return JSON object of the user you seek
      * @see UserService#findUserById(long) UserService.findUserById(long)
      */
     @GetMapping(value = "/user/{userId}",
-        produces = {"application/json"})
+            produces = "application/json")
     public ResponseEntity<?> getUserById(
-        @PathVariable
-            Long userId)
+            @PathVariable
+                    Long userId)
     {
         User u = userService.findUserById(userId);
         return new ResponseEntity<>(u,
-            HttpStatus.OK);
+                                    HttpStatus.OK);
     }
 
     /**
@@ -71,14 +79,14 @@ public class UserController
      * @see UserService#findByName(String) UserService.findByName(String)
      */
     @GetMapping(value = "/user/name/{userName}",
-        produces = {"application/json"})
+            produces = "application/json")
     public ResponseEntity<?> getUserByName(
-        @PathVariable
-            String userName)
+            @PathVariable
+                    String userName)
     {
         User u = userService.findByName(userName);
         return new ResponseEntity<>(u,
-            HttpStatus.OK);
+                                    HttpStatus.OK);
     }
 
     /**
@@ -90,14 +98,14 @@ public class UserController
      * @see UserService#findByNameContaining(String) UserService.findByNameContaining(String)
      */
     @GetMapping(value = "/user/name/like/{userName}",
-        produces = {"application/json"})
+            produces = "application/json")
     public ResponseEntity<?> getUserLikeName(
-        @PathVariable
-            String userName)
+            @PathVariable
+                    String userName)
     {
         List<User> u = userService.findByNameContaining(userName);
         return new ResponseEntity<>(u,
-            HttpStatus.OK);
+                                    HttpStatus.OK);
     }
 
     /**
@@ -112,11 +120,12 @@ public class UserController
      * @see UserService#save(User) UserService.save(User)
      */
     @PostMapping(value = "/user",
-        consumes = {"application/json"})
+            consumes = "application/json")
     public ResponseEntity<?> addNewUser(
-        @Valid
-        @RequestBody
-            User newuser) throws URISyntaxException
+            @Valid
+            @RequestBody
+                    User newuser) throws
+            URISyntaxException
     {
         newuser.setUserid(0);
         newuser = userService.save(newuser);
@@ -124,20 +133,21 @@ public class UserController
         // set the location header for the newly created resource
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{userid}")
-            .buildAndExpand(newuser.getUserid())
-            .toUri();
+                .path("/{userid}")
+                .buildAndExpand(newuser.getUserid())
+                .toUri();
         responseHeaders.setLocation(newUserURI);
 
         return new ResponseEntity<>(null,
-            responseHeaders,
-            HttpStatus.CREATED);
+                                    responseHeaders,
+                                    HttpStatus.CREATED);
     }
 
     /**
      * Given a complete User Object
      * Given the user id, primary key, is in the User table,
-     * replace the User record , user role combinations and Useremail records.
+     * replace the User record and Useremail records.
+     * Roles are handled through different endpoints
      * <br> Example: <a href="http://localhost:2019/users/user/15">http://localhost:2019/users/user/15</a>
      *
      * @param updateUser A complete User including all emails and roles to be used to
@@ -147,13 +157,13 @@ public class UserController
      * @see UserService#save(User) UserService.save(User)
      */
     @PutMapping(value = "/user/{userid}",
-        consumes = {"application/json"})
+            consumes = "application/json")
     public ResponseEntity<?> updateFullUser(
-        @Valid
-        @RequestBody
-            User updateUser,
-        @PathVariable
-            long userid)
+            @Valid
+            @RequestBody
+                    User updateUser,
+            @PathVariable
+                    long userid)
     {
         updateUser.setUserid(userid);
         userService.save(updateUser);
@@ -163,7 +173,8 @@ public class UserController
 
     /**
      * Updates the user record associated with the given id with the provided data. Only the provided fields are affected.
-     * If an email list or user role combination list is given, it replaces the list.
+     * Roles are handled through different endpoints
+     * If an email list is given, it replaces the original emai list.
      * <br> Example: <a href="http://localhost:2019/users/user/7">http://localhost:2019/users/user/7</a>
      *
      * @param updateUser An object containing values for just the fields that are being updated. All other fields are left NULL.
@@ -172,15 +183,15 @@ public class UserController
      * @see UserService#update(User, long) UserService.update(User, long)
      */
     @PatchMapping(value = "/user/{id}",
-        consumes = {"application/json"})
+            consumes = "application/json")
     public ResponseEntity<?> updateUser(
-        @RequestBody
-            User updateUser,
-        @PathVariable
-            long id)
+            @RequestBody
+                    User updateUser,
+            @PathVariable
+                    long id)
     {
         userService.update(updateUser,
-            id);
+                           id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -193,72 +204,10 @@ public class UserController
      */
     @DeleteMapping(value = "/user/{id}")
     public ResponseEntity<?> deleteUserById(
-        @PathVariable
-            long id)
+            @PathVariable
+                    long id)
     {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    /*
-     *
-     * The following routes are new from initial
-     *
-     */
-
-    /**
-     * Find all users and the number of emails associated with them. Does not include primary email in the report
-     * <br>Example: <a href="http://localhost:2019/users/user/email/count">http://localhost:2019/users/user/email/count</a>
-     *
-     * @return JSON list of all users with the number of emails associated with them.
-     */
-    @GetMapping(value = "/user/email/count",
-        produces = {"application/json"})
-    public ResponseEntity<?> getNumUserEmails()
-    {
-        return new ResponseEntity<>(userService.getCountUserEmails(),
-            HttpStatus.OK);
-    }
-
-    /**
-     * Deletes the given user, user role combination
-     * <br>Example: <a href="http://localhost:2019/users/user/7/role/2">http://localhost:2019/users/user/7/role/2</a>
-     *
-     * @param userid the user id of the user of the user role combination
-     * @param roleid the role id of the user of the user user role combination
-     * @return Status OK
-     */
-    @DeleteMapping(value = "/user/{userid}/role/{roleid}")
-    public ResponseEntity<?> deleteUserRoleByIds(
-        @PathVariable
-            long userid,
-        @PathVariable
-            long roleid)
-    {
-        userService.deleteUserRole(userid,
-            roleid);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    /**
-     * Adds the given user, user role combination
-     * <br>Example: <a href="http://localhost:2019/users/user/7/role/2">http://localhost:2019/users/user/7/role/2</a>
-     *
-     * @param userid the user id of the user user role combination
-     * @param roleid the role id of the user user role combination
-     * @return Status OK
-     */
-    @PostMapping(value = "/user/{userid}/role/{roleid}")
-    public ResponseEntity<?> postUserRoleByIds(
-        @PathVariable
-            long userid,
-        @PathVariable
-            long roleid)
-    {
-        userService.addUserRole(userid,
-            roleid);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

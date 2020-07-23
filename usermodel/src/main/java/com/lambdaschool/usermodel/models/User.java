@@ -13,7 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The entity allowing interaction with the users table
@@ -57,8 +59,7 @@ public class User extends Auditable
     @OneToMany(mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true)
-    @JsonIgnoreProperties(value = "user",
-        allowSetters = true)
+    @JsonIgnoreProperties(value = "user", allowSetters = true)
     private List<Useremail> useremails = new ArrayList<>();
 
     /**
@@ -67,9 +68,8 @@ public class User extends Auditable
      */
     @OneToMany(mappedBy = "user",
         cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "user",
-        allowSetters = true)
-    private List<UserRoles> roles = new ArrayList<>();
+    @JsonIgnoreProperties(value = "user", allowSetters = true)
+    private Set<UserRoles> roles = new HashSet<>();
 
     /**
      * Default constructor used primarily by the JPA.
@@ -86,22 +86,15 @@ public class User extends Auditable
      * @param username     The username (String) of the user
      * @param password     The password (String) of the user
      * @param primaryemail The primary email (String) of the user
-     * @param userRoles    The list of roles (userroles) assigned to this user
      */
     public User(
         String username,
         String password,
-        String primaryemail,
-        List<UserRoles> userRoles)
+        String primaryemail)
     {
         setUsername(username);
         setPassword(password);
         this.primaryemail = primaryemail;
-        for (UserRoles ur : userRoles)
-        {
-            ur.setUser(this);
-        }
-        this.roles = userRoles;
     }
 
     /**
@@ -131,13 +124,7 @@ public class User extends Auditable
      */
     public String getUsername()
     {
-        if (username == null) // this is possible when updating a user
-        {
-            return null;
-        } else
-        {
-            return username.toLowerCase();
-        }
+        return username;
     }
 
     /**
@@ -157,13 +144,7 @@ public class User extends Auditable
      */
     public String getPrimaryemail()
     {
-        if (primaryemail == null) // this is possible when updating a user
-        {
-            return null;
-        } else
-        {
-            return primaryemail.toLowerCase();
-        }
+        return primaryemail;
     }
 
     /**
@@ -221,7 +202,7 @@ public class User extends Auditable
      *
      * @return A list of user role combinations associated with this user
      */
-    public List<UserRoles> getRoles()
+    public Set<UserRoles> getRoles()
     {
         return roles;
     }
@@ -231,20 +212,8 @@ public class User extends Auditable
      *
      * @param roles Change the list of user role combinations associated with this user to this one
      */
-    public void setRoles(List<UserRoles> roles)
+    public void setRoles(Set<UserRoles> roles)
     {
         this.roles = roles;
     }
-
-    /**
-     * Add one role to this user
-     *
-     * @param role the new role (Role) to add
-     */
-    public void addRole(Role role)
-    {
-        roles.add(new UserRoles(this,
-            role));
-    }
-
 }

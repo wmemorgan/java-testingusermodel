@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * The service that works with the Role Model.
+ * <p>
+ * Note: no method update Role name
  */
 public interface RoleService
 {
@@ -44,18 +46,7 @@ public interface RoleService
      */
     Role findByName(String name);
 
-    /*
-     *
-     * The following are new from initial
-     *
-     */
-
-    /**
-     * Deletes a given role and associated user role combinations
-     *
-     * @param id The role id of the role to delete
-     */
-    void delete(long id);
+    public void deleteAll();
 
     /**
      * Updates the name of the given role
@@ -65,7 +56,6 @@ public interface RoleService
      * @return The complete role with the new name
      */
     Role update(
-        long id,
-        Role role);
-
+            long id,
+            Role role);
 }
